@@ -14,6 +14,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.NewGoodsBean;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 
@@ -24,30 +25,62 @@ import cn.ucai.fulicenter.model.utils.ImageLoader;
 public class GoodsAdapter extends RecyclerView.Adapter {
     Context mContext;
     List<NewGoodsBean> mList;
+    boolean isMore;
 
     public GoodsAdapter(Context context, List<NewGoodsBean> list) {
         mContext = context;
         mList = list;
+        isMore = true;
+    }
+
+    public boolean isMore() {
+        return isMore;
+    }
+
+    public void setMore(boolean more) {
+        isMore = more;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHolder vh = new GoodsViewHolder(View.inflate(mContext, R.layout.item_goods, null));
+        ViewHolder vh = null;
+        if (viewType == I.TYPE_FOOTER){
+            vh = new FooterViewHolder(View.inflate(mContext, R.layout.item_footer, null));
+        }else {
+            vh = new GoodsViewHolder(View.inflate(mContext, R.layout.item_goods, null));
+        }
         return vh;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == I.TYPE_FOOTER){
+            FooterViewHolder vh = (FooterViewHolder) holder;
+            vh.mTvFooter.setText(getFooterString());
+            return;
+        }
         GoodsViewHolder vh = (GoodsViewHolder) holder;
         NewGoodsBean bean = mList.get(position);
         vh.mTvGoodsName.setText(bean.getGoodsName());
         vh.mTvGoodsPrice.setText(bean.getCurrencyPrice());
-        ImageLoader.downloadImg(mContext,vh.mIvGoodsThumb,bean.getGoodsThumb());
+        ImageLoader.downloadImg(mContext, vh.mIvGoodsThumb, bean.getGoodsThumb());
+    }
+
+    private int getFooterString() {
+        return isMore?R.string.load_more:R.string.no_more;
     }
 
     @Override
     public int getItemCount() {
-        return mList!=null?mList.size():0;
+        return mList != null ? mList.size()+1 : 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position==getItemCount()-1){
+            return I.TYPE_FOOTER;
+        }
+        return I.TYPE_ITEM;
     }
 
     class GoodsViewHolder extends ViewHolder {
@@ -61,6 +94,16 @@ public class GoodsAdapter extends RecyclerView.Adapter {
         LinearLayout mLayoutGoods;
 
         GoodsViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    class FooterViewHolder extends ViewHolder {
+        @BindView(R.id.tvFooter)
+        TextView mTvFooter;
+
+        FooterViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
