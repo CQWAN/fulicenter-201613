@@ -51,12 +51,15 @@ public class NewGoodsFragment extends Fragment {
     @BindView(R.id.tv_nomore)
     TextView mTvNomore;
 
+    int catId = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_good, container, false);
         bind = ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -88,6 +91,7 @@ public class NewGoodsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         model = new NewGoodsModel();
+        catId = getActivity().getIntent().getIntExtra(I.NewAndBoutiqueGoods.CAT_ID,catId);
         initView();
         initData(I.ACTION_DOWNLOAD);
         setListener();
@@ -99,7 +103,7 @@ public class NewGoodsFragment extends Fragment {
     }
 
     private void initData(final int action) {
-        model.loadData(getContext(), pageId, new OnCompleteListener<NewGoodsBean[]>() {
+        model.loadData(getContext(),catId, pageId, new OnCompleteListener<NewGoodsBean[]>() {
             @Override
             public void onSuccess(NewGoodsBean[] result) {
                 setRefresh(false);
