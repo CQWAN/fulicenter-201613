@@ -110,11 +110,7 @@ public class CategoryFragment extends Fragment {
             public void onError(String error) {
                 loadIndex++;
                 L.e(TAG, "onError,loadChildData," + error);
-                if (loadIndex == groupList.size()) {
-                    adapter.initData(groupList, childList);
-                    L.e(TAG, "onError,load add data....");
-                    showDialog(false,false);
-                }
+                showDialog(false,false);
             }
         });
     }
