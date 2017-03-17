@@ -78,6 +78,8 @@ public class CategoryFragment extends Fragment {
                         childList.add(new ArrayList<CategoryChildBean>());
                         loadChildData(list.get(i).getId(), i);
                     }
+                }else{
+                    showDialog(false,false);
                 }
             }
 
