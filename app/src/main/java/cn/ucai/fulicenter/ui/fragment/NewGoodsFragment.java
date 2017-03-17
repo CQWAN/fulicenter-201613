@@ -135,7 +135,9 @@ public class NewGoodsFragment extends Fragment {
         if (mSrl!=null) {
             mSrl.setRefreshing(refresh);
         }
-        mTvRefresh.setVisibility(refresh?View.VISIBLE:View.GONE);
+        if (mTvRefresh!=null) {
+            mTvRefresh.setVisibility(refresh ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void setPullDownListener() {
