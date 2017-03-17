@@ -18,6 +18,7 @@ import cn.ucai.fulicenter.model.bean.CategoryChildBean;
 import cn.ucai.fulicenter.model.bean.CategoryGroupBean;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.model.utils.L;
+import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
  * Created by clawpo on 2017/3/16.
@@ -81,11 +82,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         } else {
             vh = (CategoryGroupViewHolder) view.getTag();
         }
-        CategoryGroupBean group = getGroup(groupPosition);
-        L.e(TAG,"group="+group);
-        vh.mTvGroupName.setText(group.getName());
-        ImageLoader.downloadImg(mContext, vh.mIvGroupThumb, group.getImageUrl());
-        vh.mIvIndicator.setImageResource(isExpan ? R.mipmap.expand_off : R.mipmap.expand_on);
+        vh.bind(groupPosition,isExpan);
         return view;
     }
 
@@ -99,12 +96,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         } else {
             vh = (CategoryChildViewHolder) view.getTag();
         }
-        CategoryChildBean child = getChild(groupPosition, childPosition);
-        L.e(TAG,"child="+child);
-        if (child != null){
-            vh.mTvCategoryChildName.setText(child.getName());
-            ImageLoader.downloadImg(mContext,vh.mIvCategoryChildThumb,child.getImageUrl());
-        }
+        vh.bind(groupPosition,childPosition);
         return view;
     }
 
@@ -132,9 +124,17 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         CategoryGroupViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+
+        public void bind(int groupPosition,boolean isExpan) {
+            CategoryGroupBean group = getGroup(groupPosition);
+            L.e(TAG,"group="+group);
+            mTvGroupName.setText(group.getName());
+            ImageLoader.downloadImg(mContext, mIvGroupThumb, group.getImageUrl());
+            mIvIndicator.setImageResource(isExpan ? R.mipmap.expand_off : R.mipmap.expand_on);
+        }
     }
 
-    static class CategoryChildViewHolder {
+    class CategoryChildViewHolder {
         @BindView(R.id.iv_category_child_thumb)
         ImageView mIvCategoryChildThumb;
         @BindView(R.id.tv_category_child_name)
@@ -144,6 +144,21 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
 
         CategoryChildViewHolder(View view) {
             ButterKnife.bind(this, view);
+        }
+
+        public void bind(int groupPosition, int childPosition) {
+            final CategoryChildBean child = getChild(groupPosition, childPosition);
+            L.e(TAG,"child="+child);
+            if (child != null){
+                mTvCategoryChildName.setText(child.getName());
+                ImageLoader.downloadImg(mContext,mIvCategoryChildThumb,child.getImageUrl());
+                mLayoutCategoryChild.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MFGT.gotoCategoryChild(mContext,child.getId());
+                    }
+                });
+            }
         }
     }
 }

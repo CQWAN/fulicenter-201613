@@ -132,7 +132,9 @@ public class NewGoodsFragment extends Fragment {
     }
 
     private void setRefresh(boolean refresh){
-        mSrl.setRefreshing(refresh);
+        if (mSrl!=null) {
+            mSrl.setRefreshing(refresh);
+        }
         mTvRefresh.setVisibility(refresh?View.VISIBLE:View.GONE);
     }
 

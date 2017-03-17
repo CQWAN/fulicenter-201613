@@ -10,7 +10,6 @@
 
     </ExpandableListView>
     <LinearLayout
-        android:background="#FFFF11"
         android:id="@+id/layout_tips"
         android:orientation="vertical"
         android:layout_centerInParent="true"
