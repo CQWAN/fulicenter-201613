@@ -63,7 +63,8 @@ public class CategoryFragment extends Fragment {
                     groupList.clear();
                     groupList.addAll(list);
                     for (int i=0;i<list.size();i++){
-                        loadChildData(list.get(i).getId());
+                        childList.add(new ArrayList<CategoryChildBean>());
+                        loadChildData(list.get(i).getId(),i);
                     }
                 }
             }
@@ -75,14 +76,14 @@ public class CategoryFragment extends Fragment {
         });
     }
 
-    private void loadChildData(int parentId){
+    private void loadChildData(int parentId,final int index){
         model.loadChildData(getContext(), parentId, new OnCompleteListener<CategoryChildBean[]>() {
             @Override
             public void onSuccess(CategoryChildBean[] result) {
                 loadIndex++;
                 if (result!=null){
                     ArrayList<CategoryChildBean> list = ResultUtils.array2List(result);
-                    childList.add(list);
+                    childList.set(index,list);
                 }
                 if (loadIndex==groupList.size()){
                     adapter.initData(groupList,childList);
