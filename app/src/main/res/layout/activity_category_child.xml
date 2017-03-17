@@ -5,8 +5,37 @@
     android:id="@+id/activity_boutique_child"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/layout_filter"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/main_orange">
+        <LinearLayout
+            android:id="@+id/backClickArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/back"/>
+        </LinearLayout>
+        <cn.ucai.fulicenter.ui.view.CatFilterCategoryButton
+            android:id="@+id/cat_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="分类"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@drawable/arrow2_up"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/layout_sort"
+        android:layout_below="@id/layout_filter"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
@@ -35,4 +64,5 @@
         android:layout_below="@id/layout_sort"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </RelativeLayout>

@@ -13,6 +13,8 @@ import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
+import cn.ucai.fulicenter.ui.view.CatFilterCategoryButton;
+import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
  * Created by clawpo on 2017/3/17.
@@ -26,6 +28,9 @@ public class CategoryChildActivity extends AppCompatActivity {
     Button mBtnSortPrice;
     @BindView(R.id.btn_sort_addtime)
     Button mBtnSortAddtime;
+    String groupName;
+    @BindView(R.id.cat_filter)
+    CatFilterCategoryButton mCfcbFilter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +41,12 @@ public class CategoryChildActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, mNewGoodsFragment)
                 .commit();
+        groupName = getIntent().getStringExtra(I.CategoryGroup.NAME);
+        initView();
+    }
+
+    private void initView() {
+        mCfcbFilter.setText(groupName);
     }
 
     @OnClick({R.id.btn_sort_price, R.id.btn_sort_addtime})
@@ -45,18 +56,23 @@ public class CategoryChildActivity extends AppCompatActivity {
             case R.id.btn_sort_price:
                 sortBy = sortPrice ? I.SORT_BY_PRICE_ASC : I.SORT_BY_PRICE_DESC;
                 sortPrice = !sortPrice;
-                end = getResources().getDrawable(sortPrice?
-                        R.drawable.arrow_order_up:R.drawable.arrow_order_down);
-                mBtnSortPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,end,null);
+                end = getResources().getDrawable(sortPrice ?
+                        R.drawable.arrow_order_up : R.drawable.arrow_order_down);
+                mBtnSortPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, end, null);
                 break;
             case R.id.btn_sort_addtime:
                 sortBy = sortAddTime ? I.SORT_BY_ADDTIME_ASC : I.SORT_BY_ADDTIME_DESC;
                 sortAddTime = !sortAddTime;
-                end = getResources().getDrawable(sortAddTime?
-                        R.drawable.arrow_order_up:R.drawable.arrow_order_down);
-                mBtnSortAddtime.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,end,null);
+                end = getResources().getDrawable(sortAddTime ?
+                        R.drawable.arrow_order_up : R.drawable.arrow_order_down);
+                mBtnSortAddtime.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, end, null);
                 break;
         }
         mNewGoodsFragment.sortBy(sortBy);
+    }
+
+    @OnClick(R.id.backClickArea)
+    public void backOnClick() {
+        MFGT.finish(CategoryChildActivity.this);
     }
 }
