@@ -128,9 +128,10 @@ public class MainActivity extends AppCompatActivity {
         for (int i=0;i<mRadioButtons.length;i++){
             if (i==currentIndex){
                 mRadioButtons[i].setChecked(true);
-            }else{
-                mRadioButtons[i].setChecked(false);
             }
+//            else{
+//                mRadioButtons[i].setChecked(false);
+//            }
         }
     }
 
