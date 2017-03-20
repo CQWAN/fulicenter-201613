@@ -94,4 +94,9 @@ public class CatFilterCategoryButton extends Button {
     }
 
 
+    public void reseale() {
+        if (mPopupWindow!=null){
+            mPopupWindow.dismiss();
+        }
+    }
 }

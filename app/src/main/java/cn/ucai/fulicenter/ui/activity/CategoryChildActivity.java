@@ -82,4 +82,12 @@ public class CategoryChildActivity extends AppCompatActivity {
     public void backOnClick() {
         MFGT.finish(CategoryChildActivity.this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCfcbFilter!=null) {
+            mCfcbFilter.reseale();
+        }
+    }
 }
