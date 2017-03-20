@@ -1,8 +1,10 @@
 package cn.ucai.fulicenter.ui.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +13,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.application.I;
+import cn.ucai.fulicenter.model.bean.Result;
+import cn.ucai.fulicenter.model.bean.User;
+import cn.ucai.fulicenter.model.net.IUserModel;
+import cn.ucai.fulicenter.model.net.OnCompleteListener;
+import cn.ucai.fulicenter.model.net.UserModel;
+import cn.ucai.fulicenter.model.utils.CommonUtils;
+import cn.ucai.fulicenter.model.utils.MD5;
+import cn.ucai.fulicenter.model.utils.ResultUtils;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
@@ -27,6 +38,11 @@ public class RegisterActivity extends AppCompatActivity {
     EditText mPassword;
     @BindView(R.id.confirm_password)
     EditText mConfirmPassword;
+    IUserModel model;
+    String username;
+    String nickname;
+    String password;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         initView();
+        model = new UserModel();
     }
 
     private void initView() {
@@ -53,6 +70,83 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void register() {
+        if (checkInput()){
+            showDialog();
+            model.register(RegisterActivity.this, username, nickname,
+                    MD5.getMessageDigest(password),
+                    new OnCompleteListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            Result result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result!=null){
+                                if (result.isRetMsg()){
+                                    registerSuccess();
+                                }else{
+                                    if (result.getRetCode()== I.MSG_REGISTER_USERNAME_EXISTS){
+                                        CommonUtils.showShortToast(R.string.register_fail_exists);
+                                    }else{
+                                        CommonUtils.showShortToast(R.string.register_fail);
+                                    }
+                                }
+                            }
+                            pd.dismiss();
+                        }
 
+                        @Override
+                        public void onError(String error) {
+                            pd.dismiss();
+                            CommonUtils.showShortToast(R.string.register_fail);
+                        }
+                    });
+        }
+    }
+
+    private void showDialog() {
+        pd = new ProgressDialog(RegisterActivity.this);
+        pd.setMessage(getString(R.string.registering));
+        pd.show();
+    }
+
+    private void registerSuccess() {
+        CommonUtils.showShortToast(R.string.register_success);
+        MFGT.finish(RegisterActivity.this);
+    }
+
+    private boolean checkInput() {
+        username = mUsername.getText().toString().trim();
+        nickname = mNick.getText().toString().trim();
+        password = mPassword.getText().toString().trim();
+        String confirm = mConfirmPassword.getText().toString().trim();
+        if (TextUtils.isEmpty(username)){
+            mUsername.requestFocus();
+            mUsername.setError(getString(R.string.user_name_connot_be_empty));
+            return false;
+        }
+        if (!username.matches("[a-zA-Z]\\w{5,15}")){
+            mUsername.requestFocus();
+            mUsername.setError(getString(R.string.illegal_user_name));
+            return false;
+        }
+        if (TextUtils.isEmpty(nickname)){
+            mNick.requestFocus();
+            mNick.setError(getString(R.string.nick_name_connot_be_empty));
+            return false;
+        }
+        if (TextUtils.isEmpty(password)){
+            mPassword.requestFocus();
+            mPassword.setError(getString(R.string.password_connot_be_empty));
+            return false;
+        }
+        if (TextUtils.isEmpty(confirm)){
+            mConfirmPassword.requestFocus();
+            mConfirmPassword.setError(getString(R.string.confirm_password_connot_be_empty));
+            return false;
+        }
+        if (!password.equals(confirm)){
+            mConfirmPassword.requestFocus();
+            mConfirmPassword.setError(getString(R.string.two_input_password));
+            return false;
+        }
+        return true;
     }
 }
