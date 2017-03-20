@@ -28,7 +28,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
     private static final String TAG = CategoryAdapter.class.getSimpleName();
     Context mContext;
     List<CategoryGroupBean> groupList;
-    List<List<CategoryChildBean>> childList;
+    ArrayList<ArrayList<CategoryChildBean>> childList;
 
     public CategoryAdapter(Context context) {
         mContext = context;
@@ -105,7 +105,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    public void initData(List<CategoryGroupBean> groupList, List<List<CategoryChildBean>> childList) {
+    public void initData(List<CategoryGroupBean> groupList, ArrayList<ArrayList<CategoryChildBean>> childList) {
         L.e(TAG,"initData,groupList="+groupList.size()+",childList="+childList.size());
         this.groupList.addAll(groupList);
         this.childList.addAll(childList);
@@ -152,11 +152,13 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
             if (child != null){
                 mTvCategoryChildName.setText(child.getName());
                 ImageLoader.downloadImg(mContext,mIvCategoryChildThumb,child.getImageUrl());
+                //小类的点击事件,进入到分类二级页面,将小类id,大类名称,当前大类的小类集合三个参数传给分类二级页面
                 mLayoutCategoryChild.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         MFGT.gotoCategoryChild(mContext,child.getId(),
-                                getGroup(groupPosition).getName());
+                                getGroup(groupPosition).getName(),
+                                childList.get(groupPosition));
                     }
                 });
             }

@@ -6,11 +6,17 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.model.bean.CategoryChildBean;
+import cn.ucai.fulicenter.model.utils.CommonUtils;
+import cn.ucai.fulicenter.ui.adapter.CatFilterAdapter;
 
 /**
  * Created by clawpo on 2017/3/17.
@@ -22,7 +28,11 @@ public class CatFilterCategoryButton extends Button {
     Context mContext;
     boolean isExpan = false;
     PopupWindow mPopupWindow;
+    GridView gv;
+    CatFilterAdapter adapter;
+    List<CategoryChildBean> list = new ArrayList<>();
 
+    //butterknife实例化
     public CatFilterCategoryButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -34,10 +44,10 @@ public class CatFilterCategoryButton extends Button {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isExpan){
+                if (!isExpan) {
                     initPop();
-                }else{
-                    if (mPopupWindow!=null && mPopupWindow.isShowing()) {
+                } else {
+                    if (mPopupWindow != null && mPopupWindow.isShowing()) {
                         mPopupWindow.dismiss();
                     }
                 }
@@ -47,24 +57,41 @@ public class CatFilterCategoryButton extends Button {
     }
 
     private void initPop() {
-        if (mPopupWindow==null) {
+        //popwin只实例化一次
+        if (mPopupWindow == null) {
             mPopupWindow = new PopupWindow(mContext);
             mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
             mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
             mPopupWindow.setBackgroundDrawable(new ColorDrawable(0xbb000000));
-            TextView tv = new TextView(mContext);
-            tv.setTextColor(getResources().getColor(R.color.red));
-            tv.setTextSize(30);
-            tv.setText("CatFilterCategoryButton");
-            mPopupWindow.setContentView(tv);
+            mPopupWindow.setContentView(gv);
         }
+        //显示的位置
         mPopupWindow.showAsDropDown(this);
     }
 
-    private void showArrow(){
+    private void showArrow() {
         Drawable end = getResources().getDrawable(isExpan ?
                 R.drawable.arrow2_up : R.drawable.arrow2_down);
         setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, end, null);
         isExpan = !isExpan;
     }
+
+    public void initView(String groupName, List<CategoryChildBean> l) {
+        if (groupName==null || l==null){
+            CommonUtils.showShortToast("小类数据获取异常");
+            return;
+        }
+        this.setText(groupName);
+        list = l;
+
+        //实例化列表控件
+        gv = new GridView(mContext);
+        gv.setHorizontalSpacing(10);
+        gv.setVerticalSpacing(10);
+        gv.setNumColumns(GridView.AUTO_FIT);
+        //列表里面显示数据的adapter适配器
+        adapter = new CatFilterAdapter(mContext,list);
+        gv.setAdapter(adapter);
+    }
+
 }

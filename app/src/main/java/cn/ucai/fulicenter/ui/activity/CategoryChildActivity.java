@@ -7,11 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.I;
+import cn.ucai.fulicenter.model.bean.CategoryChildBean;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
 import cn.ucai.fulicenter.ui.view.CatFilterCategoryButton;
 import cn.ucai.fulicenter.ui.view.MFGT;
@@ -29,6 +32,7 @@ public class CategoryChildActivity extends AppCompatActivity {
     @BindView(R.id.btn_sort_addtime)
     Button mBtnSortAddtime;
     String groupName;
+    List<CategoryChildBean> mlist;
     @BindView(R.id.cat_filter)
     CatFilterCategoryButton mCfcbFilter;
 
@@ -37,16 +41,19 @@ public class CategoryChildActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_child);
         ButterKnife.bind(this);
+        //接受小类id
         mNewGoodsFragment = new NewGoodsFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, mNewGoodsFragment)
                 .commit();
+        //接受大类名称,当前大类的小类集合
         groupName = getIntent().getStringExtra(I.CategoryGroup.NAME);
+        mlist = (List<CategoryChildBean>) getIntent().getSerializableExtra(I.CategoryChild.DATA);
         initView();
     }
 
     private void initView() {
-        mCfcbFilter.setText(groupName);
+        mCfcbFilter.initView(groupName,mlist);
     }
 
     @OnClick({R.id.btn_sort_price, R.id.btn_sort_addtime})
