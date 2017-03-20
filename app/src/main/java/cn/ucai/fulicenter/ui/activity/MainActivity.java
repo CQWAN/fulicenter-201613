@@ -11,11 +11,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.application.FuLiCenterApplication;
+import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.ui.fragment.CategoryFragment;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
+import cn.ucai.fulicenter.ui.view.MFGT;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.layout_new_good)
     RadioButton mLayoutNewGood;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     NewGoodsFragment mNewGoodsFragment;
     BoutiqueFragment mBoutiqueFragment;
     CategoryFragment mCategoryFragment;
+    RadioButton[] mRadioButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bind = ButterKnife.bind(this);
         initFragment();
+        initRadioButton();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container,mNewGoodsFragment)
                 .add(R.id.fragment_container,mBoutiqueFragment)
@@ -50,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
                 .hide(mBoutiqueFragment).hide(mCategoryFragment)
                 .show(mNewGoodsFragment)
                 .commit();
+    }
+
+    private void initRadioButton() {
+        mRadioButtons = new RadioButton[5];
+        mRadioButtons[0] = mLayoutNewGood;
+        mRadioButtons[1] = mLayoutBoutique;
+        mRadioButtons[2] = mLayoutCategory;
+        mRadioButtons[3] = mLayoutCart;
+        mRadioButtons[4] = mLayoutPersonalCenter;
     }
 
     private void initFragment() {
@@ -73,6 +88,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.layout_category:
                 index = 2;
                 break;
+            case R.id.layout_cart:
+                if (FuLiCenterApplication.getCurrentUser()==null){
+                    MFGT.gotoLogin(MainActivity.this);
+                }else{
+                    index = 3;
+                }
+                break;
+            case R.id.layout_personal_center:
+                if (FuLiCenterApplication.getCurrentUser()==null){
+                    MFGT.gotoLogin(MainActivity.this);
+                }else{
+                    index = 4;
+                }
+                break;
         }
         setFragment();
     }
@@ -84,6 +113,24 @@ public class MainActivity extends AppCompatActivity {
                     .show(mFragments[index])
                     .commit();
             currentIndex = index;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        L.e(TAG,"index="+index+",currentIndex="+currentIndex);
+        setRadioButton();
+    }
+
+    //避免跳转到登录后底部菜单显示不正确
+    private void setRadioButton() {
+        for (int i=0;i<mRadioButtons.length;i++){
+            if (i==currentIndex){
+                mRadioButtons[i].setChecked(true);
+            }else{
+                mRadioButtons[i].setChecked(false);
+            }
         }
     }
 
