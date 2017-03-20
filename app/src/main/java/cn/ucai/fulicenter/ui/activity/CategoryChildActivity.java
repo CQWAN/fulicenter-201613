@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +32,7 @@ public class CategoryChildActivity extends AppCompatActivity {
     @BindView(R.id.btn_sort_addtime)
     Button mBtnSortAddtime;
     String groupName;
-    List<CategoryChildBean> mlist;
+    ArrayList<CategoryChildBean> mlist;
     @BindView(R.id.cat_filter)
     CatFilterCategoryButton mCfcbFilter;
 
@@ -48,7 +48,7 @@ public class CategoryChildActivity extends AppCompatActivity {
                 .commit();
         //接受大类名称,当前大类的小类集合
         groupName = getIntent().getStringExtra(I.CategoryGroup.NAME);
-        mlist = (List<CategoryChildBean>) getIntent().getSerializableExtra(I.CategoryChild.DATA);
+        mlist = (ArrayList<CategoryChildBean>) getIntent().getSerializableExtra(I.CategoryChild.DATA);
         initView();
     }
 

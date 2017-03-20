@@ -8,13 +8,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.model.bean.CategoryChildBean;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
+import cn.ucai.fulicenter.ui.activity.CategoryChildActivity;
+import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
  * Created by clawpo on 2017/3/20.
@@ -22,11 +24,13 @@ import cn.ucai.fulicenter.model.utils.ImageLoader;
 
 public class CatFilterAdapter extends BaseAdapter {
     Context mContext;
-    List<CategoryChildBean> mlist;
+    ArrayList<CategoryChildBean> mlist;
+    String groupName;
 
-    public CatFilterAdapter(Context context, List<CategoryChildBean> mlist) {
+    public CatFilterAdapter(Context context, ArrayList<CategoryChildBean> mlist,String name) {
         mContext = context;
         this.mlist = mlist;
+        groupName = name;
     }
 
     @Override
@@ -73,9 +77,17 @@ public class CatFilterAdapter extends BaseAdapter {
         }
 
         public void bind(int position) {
-            CategoryChildBean bean = mlist.get(position);
+            final CategoryChildBean bean = mlist.get(position);
             mTvCategoryChildName.setText(bean.getName());
             ImageLoader.downloadImg(mContext,mIvCategoryChildThumb,bean.getImageUrl());
+            mLayoutCategoryChild.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //点击item跳转到分类二级页面,并finish
+                    MFGT.gotoCategoryChild(mContext,bean.getId(),groupName,mlist);
+                    ((CategoryChildActivity)mContext).finish();
+                }
+            });
         }
     }
 }
