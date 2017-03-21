@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showDialog() {
         pd = new ProgressDialog(LoginActivity.this);
-        pd.setMessage(getString(R.string.registering));
+        pd.setMessage(getString(R.string.logining));
         pd.show();
     }
 
@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                 boolean b = UserDao.getInstance(LoginActivity.this).saveUserInfo(user);
                 L.e(TAG,"loginSuccess,b="+b);
             }
-        });
+        }).start();
         MFGT.finish(LoginActivity.this);
     }
 

@@ -12,10 +12,10 @@ import cn.ucai.fulicenter.model.bean.User;
  */
 
 public class DBManager {
-    DBOpenHelper mHelper;
+    static DBOpenHelper mHelper;
     static DBManager dbmgr = new DBManager();
     public synchronized void initDB(Context context){
-        mHelper = new DBOpenHelper(context);
+        mHelper = DBOpenHelper.getInstance(context);
     }
     public static DBManager getInstance(){
         return dbmgr;
