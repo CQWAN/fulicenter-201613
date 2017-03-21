@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.model.bean.User;
@@ -60,6 +61,11 @@ public class PersonalCenterFragment extends Fragment {
     private void showUserInfo() {
         mTvUserName.setText(user.getMuserNick());
         ImageLoader.downloadImg(getContext(),mIvUserAvatar,user.getAvatar());
+    }
+
+    @OnClick({R.id.tv_center_settings,R.id.center_user_info})
+    public void goSettings(){
+        MFGT.gotoSettings(getActivity());
     }
 
     private void initOrderList() {
