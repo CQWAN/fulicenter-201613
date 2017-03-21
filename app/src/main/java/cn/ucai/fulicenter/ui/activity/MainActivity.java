@@ -127,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         L.e(TAG,"index="+index+",currentIndex="+currentIndex);
+        //用户点击个人中心或者之前在个人中心页面
+        if (index == 4 ){
+            //退出登录
+            if (FuLiCenterApplication.getCurrentUser()==null) {
+                index = 0;
+            }
+            setFragment();
+        }
         setRadioButton();
     }
 
