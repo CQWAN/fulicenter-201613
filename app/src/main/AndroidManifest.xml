@@ -28,6 +28,7 @@
         <activity android:name=".ui.activity.RegisterActivity"/>
         <activity android:name=".ui.activity.SettingsActivity"/>
         <activity android:name=".ui.activity.UpdateNickActivity"/>
+        <activity android:name=".ui.utils.ClipImageActivity"/>
     </application>
 
 </manifest>
