@@ -1,6 +1,7 @@
 package cn.ucai.fulicenter.ui.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,12 +38,17 @@ import butterknife.OnClick;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.application.I;
+import cn.ucai.fulicenter.model.bean.Result;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.dao.UserDao;
+import cn.ucai.fulicenter.model.net.IUserModel;
+import cn.ucai.fulicenter.model.net.OnCompleteListener;
+import cn.ucai.fulicenter.model.net.UserModel;
 import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.model.utils.OnSetAvatarListener;
+import cn.ucai.fulicenter.model.utils.ResultUtils;
 import cn.ucai.fulicenter.ui.utils.ClipImageActivity;
 import cn.ucai.fulicenter.ui.utils.view.CircleImageView;
 import cn.ucai.fulicenter.ui.view.MFGT;
@@ -66,6 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
     String avatarName;
     User user;
     Bundle mBundle;
+
+    ProgressDialog pd;
+    IUserModel model;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,7 +104,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void showUserInfo() {
         mTvUserProfileName.setText(user.getMuserName());
         mTvUserProfileNick.setText(user.getMuserNick());
-        ImageLoader.downloadImg(SettingsActivity.this,mIvUserProfileAvatar,user.getAvatar());
+        ImageLoader.setAvatar(ImageLoader.getAvatarUrl(user),SettingsActivity.this,mIvUserProfileAvatar);
     }
 
     @OnClick(R.id.backClickArea)
@@ -132,7 +141,53 @@ public class SettingsActivity extends AppCompatActivity {
         return avatarName;
     }
 
-    private void uploadAvatar() {
+    private void showDialog(){
+        pd = new ProgressDialog(SettingsActivity.this);
+        pd.setMessage(getString(R.string.update_user_avatar));
+        pd.show();
+    }
+    private void updateSuccess(final User u) {
+        L.e(TAG,"updateSuccess,user="+u);
+        CommonUtils.showShortToast(R.string.update_user_avatar_success);
+        FuLiCenterApplication.setCurrentUser(u);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean b = UserDao.getInstance(SettingsActivity.this).saveUserInfo(u);
+                L.e(TAG,"updateSuccess,b="+b);
+            }
+        }).start();
+//        setResult(RESULT_OK);
+        initData();
+    }
+
+    private void uploadAvatar(File file) {
+        showDialog();
+        model = new UserModel();
+        model.uploadAvatar(SettingsActivity.this, user.getMuserName(), file,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Result result = ResultUtils.getResultFromJson(s, User.class);
+                        if (result!=null){
+                            if (result.isRetMsg()){
+                                User u = (User) result.getRetData();
+                                updateSuccess(u);
+                            }else{
+                                if (result.getRetCode() == I.MSG_UPLOAD_AVATAR_FAIL){
+                                    CommonUtils.showShortToast(R.string.update_user_avatar_fail);
+                                }
+                            }
+                        }
+                        pd.dismiss();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        pd.dismiss();
+                        CommonUtils.showShortToast(R.string.update_user_avatar_fail);
+                    }
+                });
 
     }
 
@@ -329,7 +384,7 @@ public class SettingsActivity extends AppCompatActivity {
                     //此处后面可以将bitMap转为二进制上传后台网络
                     File file = saveBitmapFile(bitMap);
                     L.e(TAG,"file="+file.getAbsolutePath());
-
+                    uploadAvatar(file);
                 }
                 break;
         }

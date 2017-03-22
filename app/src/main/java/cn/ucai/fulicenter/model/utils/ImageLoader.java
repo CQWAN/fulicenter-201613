@@ -117,7 +117,7 @@ public class ImageLoader {
                             break;
                     }
                 }catch (Exception e){
-                    L.e("exception","e="+e.getMessage());
+                    L.e("imageloader","e="+e.getMessage());
                 }
             }
         };
