@@ -17,6 +17,7 @@ import cn.ucai.fulicenter.ui.activity.LoginActivity;
 import cn.ucai.fulicenter.ui.activity.MainActivity;
 import cn.ucai.fulicenter.ui.activity.RegisterActivity;
 import cn.ucai.fulicenter.ui.activity.SettingsActivity;
+import cn.ucai.fulicenter.ui.activity.UpdateNickActivity;
 
 
 /**
@@ -78,5 +79,9 @@ public class MFGT {
 
     public static void gotoSettings(Activity activity) {
         startActivity(activity,SettingsActivity.class);
+    }
+
+    public static void gotoUpdateNick(Activity activity) {
+        startActivity(activity,UpdateNickActivity.class);
     }
 }
