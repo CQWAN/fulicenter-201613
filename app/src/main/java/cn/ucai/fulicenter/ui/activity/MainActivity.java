@@ -1,5 +1,6 @@
 package cn.ucai.fulicenter.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
+import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.ui.fragment.CategoryFragment;
@@ -95,14 +97,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.layout_cart:
                 if (FuLiCenterApplication.getCurrentUser()==null){
-                    MFGT.gotoLogin(MainActivity.this);
+                    MFGT.gotoLogin(MainActivity.this,I.REQUEST_CODE_LOGIN_FROM_CART);
                 }else{
                     index = 3;
                 }
                 break;
             case R.id.layout_personal_center:
                 if (FuLiCenterApplication.getCurrentUser()==null){
-                    MFGT.gotoLogin(MainActivity.this);
+                    MFGT.gotoLogin(MainActivity.this, I.REQUEST_CODE_LOGIN);
                 }else{
                     index = 4;
                 }
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        L.e(TAG,"index="+index+",currentIndex="+currentIndex);
+        L.e(TAG,"onResume,index="+index+",currentIndex="+currentIndex);
         //用户点击个人中心或者之前在个人中心页面
         if (index == 4 ){
             //退出登录
@@ -147,6 +149,24 @@ public class MainActivity extends AppCompatActivity {
 //            else{
 //                mRadioButtons[i].setChecked(false);
 //            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        L.e(TAG,"onActivityResult,requestCode="+requestCode);
+        if (resultCode == RESULT_OK){
+            //点击个人中心
+            if (requestCode == I.REQUEST_CODE_LOGIN){
+                index = 4;
+            }
+            //点击购物车
+            if (requestCode == I.REQUEST_CODE_LOGIN_FROM_CART){
+                index = 3;
+            }
+            setFragment();
+            setRadioButton();
         }
     }
 
