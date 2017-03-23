@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -92,7 +92,7 @@ public class CollectsAdapter extends RecyclerView.Adapter {
         @BindView(R.id.iv_collect_del)
         ImageView mIvCollectDel;
         @BindView(R.id.layout_goods)
-        LinearLayout mLayoutGoods;
+        RelativeLayout mLayoutGoods;
 
         GoodsViewHolder(View view) {
             super(view);

@@ -14,6 +14,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
@@ -27,6 +28,7 @@ import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.model.utils.ResultUtils;
 import cn.ucai.fulicenter.ui.adapter.CollectsAdapter;
+import cn.ucai.fulicenter.ui.view.MFGT;
 import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
 
 /**
@@ -48,11 +50,13 @@ public class CollectsActivity extends AppCompatActivity {
     List<CollectBean> mList = new ArrayList<>();
     Unbinder bind;
     CollectsAdapter adapter;
+    @BindView(R.id.tv_common_title)
+    TextView mTvCommonTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_new_good);
+        setContentView(R.layout.activity_collects);
         bind = ButterKnife.bind(this);
         model = new UserModel();
         initView();
@@ -62,7 +66,7 @@ public class CollectsActivity extends AppCompatActivity {
 
     private void initData(final int action) {
         User user = FuLiCenterApplication.getCurrentUser();
-        if (user==null){
+        if (user == null) {
             finish();
             return;
         }
@@ -79,7 +83,7 @@ public class CollectsActivity extends AppCompatActivity {
                                 mList.clear();
                             }
                             mList.addAll(list);
-                            if (list.size() < I.PAGE_SIZE_DEFAULT){
+                            if (list.size() < I.PAGE_SIZE_DEFAULT) {
                                 adapter.setMore(false);
                             }
                             adapter.notifyDataSetChanged();
@@ -102,11 +106,11 @@ public class CollectsActivity extends AppCompatActivity {
                 getResources().getColor(R.color.google_red),
                 getResources().getColor(R.color.google_yellow));
         gm = new GridLayoutManager(CollectsActivity.this, I.COLUM_NUM);
-        gm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
+        gm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 
             @Override
             public int getSpanSize(int position) {
-                if (position == mList.size()){
+                if (position == mList.size()) {
                     return I.COLUM_NUM;
                 }
                 return 1;
@@ -117,6 +121,7 @@ public class CollectsActivity extends AppCompatActivity {
         adapter = new CollectsAdapter(CollectsActivity.this, mList);
         mRvGoods.setAdapter(adapter);
         mRvGoods.addItemDecoration(new SpaceItemDecoration(12));
+        mTvCommonTitle.setText(getString(R.string.collect_title));
     }
 
 
@@ -125,11 +130,11 @@ public class CollectsActivity extends AppCompatActivity {
         setPullUpListener();
     }
 
-    private void setRefresh(boolean refresh){
-        if (mSrl!=null) {
+    private void setRefresh(boolean refresh) {
+        if (mSrl != null) {
             mSrl.setRefreshing(refresh);
         }
-        if (mTvRefresh!=null) {
+        if (mTvRefresh != null) {
             mTvRefresh.setVisibility(refresh ? View.VISIBLE : View.GONE);
         }
     }
@@ -151,9 +156,9 @@ public class CollectsActivity extends AppCompatActivity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastPosition = gm.findLastVisibleItemPosition();
-                if(newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastPosition == adapter.getItemCount()-1
-                        && adapter.isMore()){
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && lastPosition == adapter.getItemCount() - 1
+                        && adapter.isMore()) {
                     pageId++;
                     initData(I.ACTION_PULL_UP);
                 }
@@ -163,7 +168,7 @@ public class CollectsActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int firstPosition = gm.findFirstVisibleItemPosition();
-                mSrl.setEnabled(firstPosition==0);
+                mSrl.setEnabled(firstPosition == 0);
             }
         });
     }
@@ -172,5 +177,10 @@ public class CollectsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         bind.unbind();
+    }
+
+    @OnClick(R.id.backClickArea)
+    public void backArea() {
+        MFGT.finish(CollectsActivity.this);
     }
 }
