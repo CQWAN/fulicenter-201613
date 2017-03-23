@@ -124,4 +124,9 @@ public class PersonalCenterFragment extends Fragment {
                 new String[]{"order"}, new int[]{R.id.iv_order});
         mCenterUserOrderLis.setAdapter(adapter);
     }
+
+    @OnClick(R.id.layout_center_collect)
+    public void collectList(){
+        MFGT.gotoCollectsList(getActivity());
+    }
 }

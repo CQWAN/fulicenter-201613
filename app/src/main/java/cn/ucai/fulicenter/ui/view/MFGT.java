@@ -12,6 +12,7 @@ import cn.ucai.fulicenter.model.bean.BoutiqueBean;
 import cn.ucai.fulicenter.model.bean.CategoryChildBean;
 import cn.ucai.fulicenter.ui.activity.BoutiqueChildActivity;
 import cn.ucai.fulicenter.ui.activity.CategoryChildActivity;
+import cn.ucai.fulicenter.ui.activity.CollectsActivity;
 import cn.ucai.fulicenter.ui.activity.GoodsDetailsActivity;
 import cn.ucai.fulicenter.ui.activity.LoginActivity;
 import cn.ucai.fulicenter.ui.activity.MainActivity;
@@ -83,5 +84,9 @@ public class MFGT {
 
     public static void gotoUpdateNick(Activity activity) {
         startActivity(activity,UpdateNickActivity.class);
+    }
+
+    public static void gotoCollectsList(Activity activity) {
+        startActivity(activity,CollectsActivity.class);
     }
 }
