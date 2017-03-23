@@ -22,6 +22,7 @@ import cn.ucai.fulicenter.model.net.IGoodsModel;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
 import cn.ucai.fulicenter.model.utils.CommonUtils;
 import cn.ucai.fulicenter.model.utils.L;
+import cn.ucai.fulicenter.ui.utils.AntiShake;
 import cn.ucai.fulicenter.ui.view.FlowIndicator;
 import cn.ucai.fulicenter.ui.view.MFGT;
 import cn.ucai.fulicenter.ui.view.SlideAutoLoopView;
@@ -52,6 +53,8 @@ public class GoodsDetailsActivity extends AppCompatActivity {
     @BindView(R.id.iv_good_collect)
     ImageView mIvGoodCollect;
     boolean isCollects = false;
+
+    AntiShake util = new AntiShake();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -166,6 +169,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
 
     @OnClick(R.id.iv_good_collect)
     public void collectGoods(){
+        if (util.check()) return;
         User user = FuLiCenterApplication.getCurrentUser();
         if (user==null){
             MFGT.gotoLogin(GoodsDetailsActivity.this,0);
