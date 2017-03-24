@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,10 +21,12 @@ import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.model.bean.CartBean;
+import cn.ucai.fulicenter.model.bean.GoodsDetailsBean;
 import cn.ucai.fulicenter.model.bean.User;
 import cn.ucai.fulicenter.model.net.CartModel;
 import cn.ucai.fulicenter.model.net.ICartModel;
 import cn.ucai.fulicenter.model.net.OnCompleteListener;
+import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.model.utils.ResultUtils;
 import cn.ucai.fulicenter.ui.adapter.CartAdapter;
 import cn.ucai.fulicenter.ui.view.SpaceItemDecoration;
@@ -74,7 +77,18 @@ public class CartFragment extends Fragment {
 
     private void setListener() {
         setPullDownListener();
+        adapter.setListener(mOnCheckedChangeListener);
     }
+
+    CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+            int position = (int) compoundButton.getTag();
+            L.e(TAG,"onCheckedChanged....checked="+checked+",position="+position);
+            cartList.get(position).setChecked(checked);
+            setPriceText();
+        }
+    };
 
     private void setRefresh(boolean refresh) {
         mSrl.setRefreshing(refresh);
@@ -109,6 +123,7 @@ public class CartFragment extends Fragment {
         mRv.setAdapter(adapter);
         mRv.addItemDecoration(new SpaceItemDecoration(12));
         setCartListLayut(false);
+        setPriceText();
     }
 
     private void initData() {
@@ -143,5 +158,26 @@ public class CartFragment extends Fragment {
                         Log.e(TAG, "onError,error=" + error);
                     }
                 });
+    }
+
+    private void setPriceText(){
+        int sumPrice = 0;
+        int rankPrice = 0;
+        for (CartBean cart:cartList){
+            if (cart.isChecked()){
+                GoodsDetailsBean goods = cart.getGoods();
+                if (goods!=null){
+                    sumPrice += getPrice(goods.getCurrencyPrice())*cart.getCount();
+                    rankPrice += getPrice(goods.getRankPrice())*cart.getCount();
+                }
+            }
+        }
+        mTvCartSumPrice.setText("合计：￥"+sumPrice);
+        mTvCartSavePrice.setText("节省：￥"+(sumPrice-rankPrice));
+    }
+
+    private int getPrice(String p){
+        String pStr = p.substring(p.indexOf("￥")+1);
+        return Integer.valueOf(pStr);
     }
 }
