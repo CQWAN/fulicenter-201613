@@ -17,6 +17,7 @@ import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.fragment.BoutiqueFragment;
+import cn.ucai.fulicenter.ui.fragment.CartFragment;
 import cn.ucai.fulicenter.ui.fragment.CategoryFragment;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
 import cn.ucai.fulicenter.ui.fragment.PersonalCenterFragment;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     BoutiqueFragment mBoutiqueFragment;
     CategoryFragment mCategoryFragment;
     PersonalCenterFragment mPersonalCenterFragment;
+    CartFragment mCartFragment;
     RadioButton[] mRadioButtons;
 
     @Override
@@ -77,10 +79,12 @@ public class MainActivity extends AppCompatActivity {
         mNewGoodsFragment = new NewGoodsFragment();
         mBoutiqueFragment = new BoutiqueFragment();
         mCategoryFragment = new CategoryFragment();
+        mCartFragment = new CartFragment();
         mPersonalCenterFragment = new PersonalCenterFragment();
         mFragments[0] = mNewGoodsFragment;
         mFragments[1] = mBoutiqueFragment;
         mFragments[2] = mCategoryFragment;
+        mFragments[3] = mCartFragment;
         mFragments[4] = mPersonalCenterFragment;
     }
 
