@@ -14,8 +14,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.application.FuLiCenterApplication;
 import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.bean.CollectBean;
+import cn.ucai.fulicenter.model.bean.MessageBean;
+import cn.ucai.fulicenter.model.net.GoodsModel;
+import cn.ucai.fulicenter.model.net.IGoodsModel;
+import cn.ucai.fulicenter.model.net.OnCompleteListener;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.ui.view.FooterViewHolder;
 import cn.ucai.fulicenter.ui.view.MFGT;
@@ -28,11 +33,13 @@ public class CollectsAdapter extends RecyclerView.Adapter {
     Context mContext;
     List<CollectBean> mList;
     boolean isMore;
+    IGoodsModel model;
 
     public CollectsAdapter(Context context, List<CollectBean> list) {
         mContext = context;
         mList = list;
         isMore = true;
+        model = new GoodsModel();
     }
 
     public boolean isMore() {
@@ -94,13 +101,14 @@ public class CollectsAdapter extends RecyclerView.Adapter {
         @BindView(R.id.layout_goods)
         RelativeLayout mLayoutGoods;
 
+
         GoodsViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
 
-        public void bind(int position) {
+        public void bind(final int position) {
             final CollectBean bean = mList.get(position);
             mTvGoodsName.setText(bean.getGoodsName());
             ImageLoader.downloadImg(mContext, mIvGoodsThumb, bean.getGoodsThumb());
@@ -110,6 +118,32 @@ public class CollectsAdapter extends RecyclerView.Adapter {
                     MFGT.gotoDetails(mContext,bean.getGoodsId());
                 }
             });
+
+            mIvCollectDel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeCollect(position,bean.getGoodsId());
+                }
+            });
+        }
+
+        private void removeCollect(final int position, int goodsId){
+            model.collectAction(mContext, I.ACTION_DELETE_COLLECT, goodsId,
+                    FuLiCenterApplication.getCurrentUser().getMuserName(),
+                    new OnCompleteListener<MessageBean>() {
+                        @Override
+                        public void onSuccess(MessageBean result) {
+                            if (result!=null && result.isSuccess()){
+                                mList.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+
+                        }
+                    });
         }
     }
 }
