@@ -28,7 +28,6 @@ public class CartAdapter extends RecyclerView.Adapter {
     List<CartBean> mList;
     CompoundButton.OnCheckedChangeListener listener;
     View.OnClickListener updateListener;
-    View.OnClickListener deleteListener;
 
     public CartAdapter(Context context, List<CartBean> list) {
         mContext = context;
@@ -41,10 +40,6 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     public void setUpdateListener(View.OnClickListener updateListener) {
         this.updateListener = updateListener;
-    }
-
-    public void setDeleteListener(View.OnClickListener deleteListener) {
-        this.deleteListener = deleteListener;
     }
 
     @Override
@@ -99,9 +94,11 @@ public class CartAdapter extends RecyclerView.Adapter {
             mCbCartSelected.setTag(position);
             mCbCartSelected.setOnCheckedChangeListener(listener);
             mIvCartAdd.setTag(position);
+            mIvCartAdd.setTag(R.id.action_add_cart,1);
             mIvCartAdd.setOnClickListener(updateListener);
             mIvCartDel.setTag(position);
-            mIvCartDel.setOnClickListener(deleteListener);
+            mIvCartDel.setTag(R.id.action_del_cart,-1);
+            mIvCartDel.setOnClickListener(updateListener);
         }
     }
 }
