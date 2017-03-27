@@ -18,6 +18,7 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.model.bean.CartBean;
 import cn.ucai.fulicenter.model.bean.GoodsDetailsBean;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
+import cn.ucai.fulicenter.model.utils.L;
 
 /**
  * Created by clawpo on 2017/3/15.
@@ -51,7 +52,7 @@ public class CartAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         CartViewHolder vh = (CartViewHolder) holder;
-        final CartBean bean = mList.get(position);
+        L.e("adapter","onBindViewHolder,vh.bind....");
         vh.bind(position);
     }
 
@@ -82,7 +83,9 @@ public class CartAdapter extends RecyclerView.Adapter {
         }
 
         public void bind(int position) {
+            mCbCartSelected.setOnCheckedChangeListener(null);
             CartBean bean = mList.get(position);
+            L.e("adapter","bind,position="+position+",bean="+bean.isChecked());
             mTvCartCount.setText("("+bean.getCount()+")");
             mCbCartSelected.setChecked(bean.isChecked());
             GoodsDetailsBean goods = bean.getGoods();
