@@ -81,27 +81,37 @@ public class CartFragment extends Fragment {
         setPullDownListener();
         adapter.setListener(mOnCheckedChangeListener);
         adapter.setUpdateListener(updateListener);
+        adapter.setDeleteListener(deleteListener);
     }
+
+    View.OnClickListener deleteListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int position = (int) view.getTag();
+            L.e(TAG,"updateListener,position="+position);
+            updateCart(position,-1);
+        }
+    };
 
     View.OnClickListener updateListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             int position = (int) view.getTag();
             L.e(TAG,"updateListener,position="+position);
-            updateCart(position);
+            updateCart(position,1);
         }
     };
 
-    private void updateCart(final int position) {
+    private void updateCart(final int position, final int count) {
         CartBean bean = cartList.get(position);
         if (bean!=null) {
             model.cartAction(getContext(), I.ACTION_CART_UPDATA, String.valueOf(bean.getId()), null, null,
-                    bean.getCount() + 1,
+                    bean.getCount() + count,
                     new OnCompleteListener<MessageBean>() {
                         @Override
                         public void onSuccess(MessageBean result) {
                             if (result!=null && result.isSuccess()){
-                                updateCartListView(position);
+                                updateCartListView(position,count);
                             }
                         }
 
@@ -113,8 +123,8 @@ public class CartFragment extends Fragment {
         }
     }
 
-    private void updateCartListView(int position) {
-        cartList.get(position).setCount(cartList.get(position).getCount()+1);
+    private void updateCartListView(int position,int count) {
+        cartList.get(position).setCount(cartList.get(position).getCount()+count);
         adapter.notifyDataSetChanged();
         setPriceText();
     }
