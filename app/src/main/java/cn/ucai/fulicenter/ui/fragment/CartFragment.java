@@ -134,6 +134,7 @@ public class CartFragment extends Fragment {
             cartList.get(position).setCount(cartList.get(position).getCount() + count);
         }
         adapter.notifyDataSetChanged();
+        setCartListLayut(!cartList.isEmpty());
         setPriceText();
     }
 
