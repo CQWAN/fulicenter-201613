@@ -28,8 +28,6 @@ import cn.ucai.fulicenter.application.I;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.view.MFGT;
 
-import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
-
 /**
  * Created by clawpo on 2017/3/27.
  */
@@ -48,6 +46,7 @@ public class OrderActivity extends AppCompatActivity {
     TextView mTvOrderPrice;
 
     int orderPrice = 0;
+    private static String URL = "http://218.244.151.190/demo/charge";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
