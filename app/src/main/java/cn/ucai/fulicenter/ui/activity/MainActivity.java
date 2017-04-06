@@ -19,6 +19,7 @@ import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.ui.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.ui.fragment.CartFragment;
 import cn.ucai.fulicenter.ui.fragment.CategoryFragment;
+import cn.ucai.fulicenter.ui.fragment.CategoryFragment_Event;
 import cn.ucai.fulicenter.ui.fragment.NewGoodsFragment;
 import cn.ucai.fulicenter.ui.fragment.PersonalCenterFragment;
 import cn.ucai.fulicenter.ui.view.MFGT;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     NewGoodsFragment mNewGoodsFragment;
     BoutiqueFragment mBoutiqueFragment;
     CategoryFragment mCategoryFragment;
+    CategoryFragment_Event mCategoryFragmentEvent;
     PersonalCenterFragment mPersonalCenterFragment;
     CartFragment mCartFragment;
     RadioButton[] mRadioButtons;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container,mNewGoodsFragment)
                 .add(R.id.fragment_container,mBoutiqueFragment)
-                .add(R.id.fragment_container,mCategoryFragment)
+                .add(R.id.fragment_container,mCategoryFragmentEvent)
                 .hide(mBoutiqueFragment).hide(mCategoryFragment)
                 .show(mNewGoodsFragment)
                 .commit();
@@ -79,11 +81,12 @@ public class MainActivity extends AppCompatActivity {
         mNewGoodsFragment = new NewGoodsFragment();
         mBoutiqueFragment = new BoutiqueFragment();
         mCategoryFragment = new CategoryFragment();
+        mCategoryFragmentEvent = new CategoryFragment_Event();
         mCartFragment = new CartFragment();
         mPersonalCenterFragment = new PersonalCenterFragment();
         mFragments[0] = mNewGoodsFragment;
         mFragments[1] = mBoutiqueFragment;
-        mFragments[2] = mCategoryFragment;
+        mFragments[2] = mCategoryFragmentEvent;
         mFragments[3] = mCartFragment;
         mFragments[4] = mPersonalCenterFragment;
     }
