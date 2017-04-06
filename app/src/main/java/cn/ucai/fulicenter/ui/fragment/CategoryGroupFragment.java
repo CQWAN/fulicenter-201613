@@ -40,6 +40,7 @@ public class CategoryGroupFragment extends ListFragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 list));
+        getListView().setItemChecked(0,true);
     }
 
     @Override
@@ -47,6 +48,7 @@ public class CategoryGroupFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         CategoryGroupBean groupBean = (CategoryGroupBean) getListView().getItemAtPosition(position);
         CommonUtils.showLongToast(groupBean.getId()+","+groupBean.getName());
+        EventBus.getDefault().post(groupBean);
     }
 
     class WorkThread extends Thread{
