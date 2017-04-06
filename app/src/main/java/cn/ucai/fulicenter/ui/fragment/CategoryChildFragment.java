@@ -29,6 +29,7 @@ import cn.ucai.fulicenter.model.net.OnCompleteListener;
 import cn.ucai.fulicenter.model.utils.ImageLoader;
 import cn.ucai.fulicenter.model.utils.L;
 import cn.ucai.fulicenter.model.utils.ResultUtils;
+import cn.ucai.fulicenter.ui.view.MFGT;
 
 /**
  * Created by clawpo on 2017/4/6.
@@ -37,6 +38,7 @@ import cn.ucai.fulicenter.model.utils.ResultUtils;
 public class CategoryChildFragment extends Fragment {
     ICategoryModel model;
     int parentId = 344;
+    String groupName;
     @BindView(R.id.rv_category_child)
     RecyclerView mRvCategoryChild;
     childAdapter adapter;
@@ -60,7 +62,7 @@ public class CategoryChildFragment extends Fragment {
         mRvCategoryChild.setHasFixedSize(true);
         StaggeredGridLayoutManager sgm = new StaggeredGridLayoutManager(I.COLUM_NUM,StaggeredGridLayoutManager.VERTICAL);
         mRvCategoryChild.setLayoutManager(sgm);
-        adapter = new childAdapter(new ArrayList<CategoryChildBean>());
+        adapter = new childAdapter(new ArrayList<CategoryChildBean>(),"");
         mRvCategoryChild.setAdapter(adapter);
     }
 
@@ -76,6 +78,7 @@ public class CategoryChildFragment extends Fragment {
         L.e("child","group="+group);
         if (group!=null) {
             parentId = group.getId();
+            groupName = group.getName();
             syncData();
         }
     }
@@ -86,7 +89,7 @@ public class CategoryChildFragment extends Fragment {
             public void onSuccess(CategoryChildBean[] result) {
                 if (result != null) {
                     ArrayList<CategoryChildBean> list = ResultUtils.array2List(result);
-                    adapter.setChildList(list);
+                    adapter.setChildList(list,groupName);
                 }
             }
 
@@ -98,13 +101,16 @@ public class CategoryChildFragment extends Fragment {
 
     class childAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ArrayList<CategoryChildBean> childList = new ArrayList<>();
+        String groupName;
 
-        public childAdapter(ArrayList<CategoryChildBean> childList) {
+        public childAdapter(ArrayList<CategoryChildBean> childList,String name) {
             this.childList = childList;
+            groupName = name;
         }
 
-        public void setChildList(ArrayList<CategoryChildBean> childList) {
+        public void setChildList(ArrayList<CategoryChildBean> childList,String name) {
             this.childList = childList;
+            groupName = name;
             notifyDataSetChanged();
         }
 
@@ -116,12 +122,20 @@ public class CategoryChildFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             ChildViewHolder vh = (ChildViewHolder) holder;
             final CategoryChildBean child = childList.get(position);
             if (child != null) {
                 vh.mTvChild.setText(child.getName());
                 ImageLoader.downloadImg(getContext(), vh.mIvChild, child.getImageUrl());
+                vh.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MFGT.gotoCategoryChild(getContext(),child.getId(),
+                                groupName,
+                                childList);
+                    }
+                });
             }
         }
 
