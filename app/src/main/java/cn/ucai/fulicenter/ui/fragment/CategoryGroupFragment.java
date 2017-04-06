@@ -1,10 +1,15 @@
 package cn.ucai.fulicenter.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -29,6 +34,7 @@ public class CategoryGroupFragment extends ListFragment {
         new WorkThread().start();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void setAdapter(ArrayList<CategoryGroupBean> list){
         setListAdapter(new ArrayAdapter<CategoryGroupBean>(getContext(),
                 android.R.layout.simple_list_item_activated_1,
@@ -51,7 +57,8 @@ public class CategoryGroupFragment extends ListFragment {
                 public void onSuccess(CategoryGroupBean[] result) {
                     if (result != null) {
                         ArrayList<CategoryGroupBean> list = ResultUtils.array2List(result);
-                        setAdapter(list);
+                        EventBus.getDefault().post(list);
+//                        setAdapter(list);
                     }
                 }
 
@@ -61,5 +68,17 @@ public class CategoryGroupFragment extends ListFragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
