@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container,mNewGoodsFragment)
                 .add(R.id.fragment_container,mBoutiqueFragment)
-                .add(R.id.fragment_container,mCategoryFragmentEvent)
+//                .add(R.id.fragment_container,mCategoryFragmentEvent)
                 .hide(mBoutiqueFragment)
-                .hide(mCategoryFragmentEvent)
+//                .hide(mCategoryFragmentEvent)
                 .show(mNewGoodsFragment)
                 .commit();
     }
