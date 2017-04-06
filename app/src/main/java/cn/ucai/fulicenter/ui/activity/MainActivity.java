@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.fragment_container,mNewGoodsFragment)
                 .add(R.id.fragment_container,mBoutiqueFragment)
                 .add(R.id.fragment_container,mCategoryFragmentEvent)
-                .hide(mBoutiqueFragment).hide(mCategoryFragment)
+                .hide(mBoutiqueFragment)
+                .hide(mCategoryFragmentEvent)
                 .show(mNewGoodsFragment)
                 .commit();
     }
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         mFragments = new Fragment[5];
         mNewGoodsFragment = new NewGoodsFragment();
         mBoutiqueFragment = new BoutiqueFragment();
-        mCategoryFragment = new CategoryFragment();
+//        mCategoryFragment = new CategoryFragment();
         mCategoryFragmentEvent = new CategoryFragment_Event();
         mCartFragment = new CartFragment();
         mPersonalCenterFragment = new PersonalCenterFragment();
